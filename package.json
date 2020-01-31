@@ -7,7 +7,8 @@
 	"workspaces": [
 		"client",
 		"apps/*",
-		"packages/*"
+		"packages/*",
+		"tests/e2e"
 	],
 	"license": "GPL-2.0-or-later",
 	"repository": {
