@@ -177,22 +177,16 @@ export function useShoppingCart(
 			setResponseCart( response );
 
 			if ( couponStatus === 'pending' ) {
-				if ( responseCart.is_coupon_applied ) {
-					showAddCouponSuccessMessage( responseCart.coupon );
+				if ( response.is_coupon_applied ) {
+					showAddCouponSuccessMessage( response.coupon );
 					setCouponStatus( 'applied' );
 				}
 
-				if (
-					! responseCart.is_coupon_applied &&
-					responseCart.coupon_discounts_integer?.length <= 0
-				) {
+				if ( ! response.is_coupon_applied && response.coupon_discounts_integer?.length <= 0 ) {
 					setCouponStatus( 'invalid' );
 				}
 
-				if (
-					! responseCart.is_coupon_applied &&
-					responseCart.coupon_discounts_integer?.length > 0
-				) {
+				if ( ! response.is_coupon_applied && response.coupon_discounts_integer?.length > 0 ) {
 					setCouponStatus( 'rejected' );
 				}
 			}
