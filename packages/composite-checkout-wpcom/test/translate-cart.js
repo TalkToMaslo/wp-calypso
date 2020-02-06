@@ -614,7 +614,9 @@ describe( 'translateWpcomCartToCheckoutCart', function() {
 			is_coupon_applied: true,
 		};
 
-		const clientCart = translateWpcomCartToCheckoutCart( x => x, serverResponse );
+		const clientCart = translateWpcomCartToCheckoutCart( ( string, variable ) => {
+			string.replace( '%s', variable );
+		}, serverResponse );
 
 		it( 'has a total property', function() {
 			expect( clientCart.total.amount ).toBeDefined();
