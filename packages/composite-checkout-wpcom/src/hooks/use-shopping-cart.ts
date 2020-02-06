@@ -252,20 +252,23 @@ export function useShoppingCart(
 		debug( 'updating prices for address in cart', address );
 	};
 
-	const submitCoupon: ( string ) => void = useCallback( newCoupon => {
-		if ( couponStatus === 'applied' || couponStatus === 'pending' ) {
-			debug( `coupon status is '${ couponStatus }'; not submitting again` );
-			return;
-		}
-		debug( 'submitting coupon', newCoupon );
-		setResponseCart( currentResponseCart => ( {
-			...currentResponseCart,
-			coupon: newCoupon,
-			is_coupon_applied: false,
-		} ) );
-		setCacheStatus( 'invalid' );
-		setCouponStatus( 'pending' );
-	}, [] );
+	const submitCoupon: ( string ) => void = useCallback(
+		newCoupon => {
+			if ( couponStatus === 'applied' || couponStatus === 'pending' ) {
+				debug( `coupon status is '${ couponStatus }'; not submitting again` );
+				return;
+			}
+			debug( 'submitting coupon', newCoupon );
+			setResponseCart( currentResponseCart => ( {
+				...currentResponseCart,
+				coupon: newCoupon,
+				is_coupon_applied: false,
+			} ) );
+			setCacheStatus( 'invalid' );
+			setCouponStatus( 'pending' );
+		},
+		[ couponStatus ]
+	);
 
 	return {
 		isLoading: cacheStatus === 'fresh',
