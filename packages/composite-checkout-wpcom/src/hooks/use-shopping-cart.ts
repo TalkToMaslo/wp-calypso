@@ -209,7 +209,7 @@ export function useShoppingCart(
 				setCouponStatus( 'rejected' );
 			}
 		}
-	}, [ couponStatus, responseCart ] );
+	}, [ couponStatus, responseCart, showAddCouponSuccessMessage ] );
 
 	// Keep a separate cache of the displayed cart which we regenerate only when
 	// the cart has been downloaded
