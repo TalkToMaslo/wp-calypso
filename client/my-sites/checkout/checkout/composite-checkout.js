@@ -129,6 +129,7 @@ export default function CompositeCheckout( {
 		siteSlug,
 		setCart || wpcomSetCart,
 		getCart || wpcomGetCart,
+		translate,
 		showAddCouponSuccessMessage
 	);
 
