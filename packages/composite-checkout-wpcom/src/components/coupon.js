@@ -32,7 +32,7 @@ export default function Coupon( { id, className, disabled, couponStatus, couponF
 	const hasCouponError = couponStatus === 'invalid' || couponStatus === 'rejected';
 	const isPending = couponStatus === 'pending';
 
-	const errorMessage = getCouponErrorMessageFromStatus( translate, isFreshOrEdited );
+	const errorMessage = getCouponErrorMessageFromStatus( translate, couponStatus, isFreshOrEdited );
 
 	return (
 		<CouponWrapper
