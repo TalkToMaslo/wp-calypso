@@ -175,6 +175,28 @@ export function useShoppingCart(
 			const response = await setServerCart( prepareRequestCart( responseCart ) );
 			debug( 'cart sent; new responseCart is', response );
 			setResponseCart( response );
+
+			if ( couponStatus === 'pending' ) {
+				if ( responseCart.is_coupon_applied ) {
+					showAddCouponSuccessMessage( responseCart.coupon );
+					setCouponStatus( 'applied' );
+				}
+
+				if (
+					! responseCart.is_coupon_applied &&
+					responseCart.coupon_discounts_integer?.length <= 0
+				) {
+					setCouponStatus( 'invalid' );
+				}
+
+				if (
+					! responseCart.is_coupon_applied &&
+					responseCart.coupon_discounts_integer?.length > 0
+				) {
+					setCouponStatus( 'rejected' );
+				}
+			}
+
 			setCacheStatus( 'valid' );
 		};
 
@@ -188,28 +210,7 @@ export function useShoppingCart(
 				debug( 'error while fetching cart', error );
 			} );
 		}
-	}, [ setServerCart, cacheStatus, responseCart ] );
-
-	// Update the coupon state
-	useEffect( () => {
-		if ( couponStatus === 'pending' ) {
-			if ( responseCart.is_coupon_applied ) {
-				showAddCouponSuccessMessage( responseCart.coupon );
-				setCouponStatus( 'applied' );
-			}
-
-			if (
-				! responseCart.is_coupon_applied &&
-				responseCart.coupon_discounts_integer?.length <= 0
-			) {
-				setCouponStatus( 'invalid' );
-			}
-
-			if ( ! responseCart.is_coupon_applied && responseCart.coupon_discounts_integer?.length > 0 ) {
-				setCouponStatus( 'rejected' );
-			}
-		}
-	}, [ couponStatus, responseCart, showAddCouponSuccessMessage ] );
+	}, [ cacheStatus, couponStatus, responseCart, showAddCouponSuccessMessage ] );
 
 	// Keep a separate cache of the displayed cart which we regenerate only when
 	// the cart has been downloaded
