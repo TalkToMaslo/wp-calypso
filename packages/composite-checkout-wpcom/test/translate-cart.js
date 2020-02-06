@@ -615,7 +615,7 @@ describe( 'translateWpcomCartToCheckoutCart', function() {
 		};
 
 		const clientCart = translateWpcomCartToCheckoutCart( ( string, variable ) => {
-			string.replace( '%s', variable );
+			return string.replace( '%s', variable );
 		}, serverResponse );
 
 		it( 'has a total property', function() {
