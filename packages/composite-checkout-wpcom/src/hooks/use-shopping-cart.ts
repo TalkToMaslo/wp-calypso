@@ -175,22 +175,6 @@ export function useShoppingCart(
 			const response = await setServerCart( prepareRequestCart( responseCart ) );
 			debug( 'cart sent; new responseCart is', response );
 			setResponseCart( response );
-
-			if ( couponStatus === 'pending' ) {
-				if ( response.is_coupon_applied ) {
-					showAddCouponSuccessMessage( response.coupon );
-					setCouponStatus( 'applied' );
-				}
-
-				if ( ! response.is_coupon_applied && response.coupon_discounts_integer?.length <= 0 ) {
-					setCouponStatus( 'invalid' );
-				}
-
-				if ( ! response.is_coupon_applied && response.coupon_discounts_integer?.length > 0 ) {
-					setCouponStatus( 'rejected' );
-				}
-			}
-
 			setCacheStatus( 'valid' );
 		};
 
@@ -205,6 +189,27 @@ export function useShoppingCart(
 			} );
 		}
 	}, [ setServerCart, cacheStatus, responseCart ] );
+
+	// Update the coupon state
+	useEffect( () => {
+		if ( couponStatus === 'pending' ) {
+			if ( responseCart.is_coupon_applied ) {
+				showAddCouponSuccessMessage( responseCart.coupon );
+				setCouponStatus( 'applied' );
+			}
+
+			if (
+				! responseCart.is_coupon_applied &&
+				responseCart.coupon_discounts_integer?.length <= 0
+			) {
+				setCouponStatus( 'invalid' );
+			}
+
+			if ( ! responseCart.is_coupon_applied && responseCart.coupon_discounts_integer?.length > 0 ) {
+				setCouponStatus( 'rejected' );
+			}
+		}
+	}, [ couponStatus, responseCart ] );
 
 	// Keep a separate cache of the displayed cart which we regenerate only when
 	// the cart has been downloaded
