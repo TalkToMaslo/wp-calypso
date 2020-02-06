@@ -21,7 +21,7 @@ import {
  * @returns Cart object suitable for passing to the checkout component
  */
 export function translateWpcomCartToCheckoutCart(
-	translate: ( string ) => string,
+	translate: ( string, any? ) => string,
 	serverCart: ResponseCart
 ): WPCOMCart {
 	const {
