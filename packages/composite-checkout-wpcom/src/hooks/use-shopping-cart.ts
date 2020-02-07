@@ -143,6 +143,10 @@ export function useShoppingCart(
 
 	// Asynchronously initialize the cart. This should happen exactly once.
 	useEffect( () => {
+		if ( cacheStatus !== 'fresh' ) {
+			return;
+		}
+
 		let isSubscribed = true;
 
 		const initializeResponseCart = async () => {
@@ -159,15 +163,12 @@ export function useShoppingCart(
 			isSubscribed && setCacheStatus( 'valid' );
 		};
 
-		debug( 'considering initializing cart to server; cacheStatus is', cacheStatus );
-		if ( cacheStatus === 'fresh' ) {
-			debug( 'initializing the cart' );
-			initializeResponseCart().catch( error => {
-				// TODO: figure out what to do here
-				isSubscribed && setCacheStatus( 'error' );
-				debug( 'error while initializing cart', error );
-			} );
-		}
+		debug( `initializing the cart; cacheStatus is ${ cacheStatus }` );
+		initializeResponseCart().catch( error => {
+			// TODO: figure out what to do here
+			isSubscribed && setCacheStatus( 'error' );
+			debug( 'error while initializing cart', error );
+		} );
 
 		return () => {
 			isSubscribed = false;
@@ -185,6 +186,7 @@ export function useShoppingCart(
 			isSubscribed && setResponseCart( response );
 
 			if ( couponStatus === 'pending' ) {
+				debug( 'isSubscribed:', isSubscribed );
 				if ( response.is_coupon_applied ) {
 					showAddCouponSuccessMessage( response.coupon );
 					isSubscribed && setCouponStatus( 'applied' );
