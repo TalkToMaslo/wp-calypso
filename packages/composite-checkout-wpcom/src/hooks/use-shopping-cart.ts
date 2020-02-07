@@ -169,45 +169,53 @@ export function useShoppingCart(
 			} );
 		}
 
-		return () => ( isSubscribed = false );
+		return () => {
+			isSubscribed = false;
+		};
 	}, [ getServerCart, cacheStatus ] );
 
 	// Asynchronously re-validate when the cache is dirty.
 	useEffect( () => {
+		let isSubscribed = true;
+
 		const fetchAndUpdate = async () => {
 			debug( 'sending cart with responseCart', responseCart );
 			const response = await setServerCart( prepareRequestCart( responseCart ) );
 			debug( 'cart sent; new responseCart is', response );
-			setResponseCart( response );
+			isSubscribed && setResponseCart( response );
 
 			if ( couponStatus === 'pending' ) {
 				if ( response.is_coupon_applied ) {
 					showAddCouponSuccessMessage( response.coupon );
-					setCouponStatus( 'applied' );
+					isSubscribed && setCouponStatus( 'applied' );
 				}
 
 				if ( ! response.is_coupon_applied && response.coupon_discounts_integer?.length <= 0 ) {
-					setCouponStatus( 'invalid' );
+					isSubscribed && setCouponStatus( 'invalid' );
 				}
 
 				if ( ! response.is_coupon_applied && response.coupon_discounts_integer?.length > 0 ) {
-					setCouponStatus( 'rejected' );
+					isSubscribed && setCouponStatus( 'rejected' );
 				}
 			}
 
-			setCacheStatus( 'valid' );
+			isSubscribed && setCacheStatus( 'valid' );
 		};
 
 		debug( 'considering sending cart to server; cacheStatus is', cacheStatus );
 		if ( cacheStatus === 'invalid' ) {
 			debug( 'updating the cart' );
-			setCacheStatus( 'pending' );
+			isSubscribed && setCacheStatus( 'pending' );
 			fetchAndUpdate().catch( error => {
 				// TODO: figure out what to do here
-				setCacheStatus( 'error' );
+				isSubscribed && setCacheStatus( 'error' );
 				debug( 'error while fetching cart', error );
 			} );
 		}
+
+		return () => {
+			isSubscribed = false;
+		};
 	}, [ cacheStatus, couponStatus, responseCart, showAddCouponSuccessMessage ] );
 
 	// Keep a separate cache of the displayed cart which we regenerate only when
