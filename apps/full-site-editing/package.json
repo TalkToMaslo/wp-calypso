@@ -38,7 +38,7 @@
 		"test:unit": "npx wp-scripts test-unit-js --config='jest.config.js'",
 		"test:unit:help": "npx wp-scripts test-unit-js --config='jest.config.js' --help",
 		"test:unit:watch": "npx wp-scripts test-unit-js --config='jest.config.js' --watch",
-		"test:e2e": "npx wp-scripts test-e2e --wordpress-base-url='http://localhost:9999'",
+		"test:e2e": "npx wp-scripts test-e2e --wordpress-base-url='http://localhost:4013'",
 		"test:e2e:watch": "npm run test-e2e -- --watch",
 		"clean": "npx rimraf dist full-site-editing-plugin/*/dist",
 		"prebuild": "npm run clean",
